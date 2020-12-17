@@ -67,9 +67,9 @@ public class GoogleQuery {
 		
 		Document doc = Jsoup.parse(content);
 		
-		System.out.println(doc.text());
-		
-		Elements lis = doc.select("a");
+		System.out.println(doc.text()+"\n\n");
+		 
+		Elements lis = doc.select("div");
 		// System.out.println(lis);
 		
 		lis = lis.select(".kCrYT");
@@ -79,17 +79,25 @@ public class GoogleQuery {
 		{
 			try 
 			{
-				System.out.println(li+" (> _ <) <done>");
-				System.out.println("-----------------------------------------------------------------");
+				System.out.println(li);				
 				String citeUrl = li.select("a").get(0).attr("href");
 				String title = li.select("a").get(0).select(".vvjwJb").text();
-				System.out.println(title + ","+citeUrl);
+				//System.out.println(title + ","+citeUrl);
+				
+				if (citeUrl.contains("/url"))
+					citeUrl = citeUrl.substring(7);
+				
+				//System.out.println(citeUrl.substring(7));
+				
+				//WordCounter counter = new WordCounter(citeUrl);
+			    //System.out.println(counter.countKeyword(this.searchKeyword));
+				
 				retVal.put(title, citeUrl);
-
+				
 			} catch (IndexOutOfBoundsException e) {
 //				e.printStackTrace();
 			}
 		}
-		return retVal;
+		return retVal; //show all search results' title and URL
 	}
 }
