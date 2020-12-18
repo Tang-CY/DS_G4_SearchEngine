@@ -78,19 +78,20 @@ public class GoogleQuery {
 		for(Element li : lis)
 		{
 			try 
-			{
-				System.out.println(li);				
+			{			
 				String citeUrl = li.select("a").get(0).attr("href");
 				String title = li.select("a").get(0).select(".vvjwJb").text();
 				//System.out.println(title + ","+citeUrl);
+					
+				//System.out.println(li);	//印原結果
 				
-				if (citeUrl.contains("/url"))
-					citeUrl = citeUrl.substring(7);
+				/*if (citeUrl.contains("/url"))
+					citeUrl = citeUrl.substring(7);	
+				*/
+				System.out.println(citeUrl); //只印網址
 				
-				//System.out.println(citeUrl.substring(7));
-				
-				//WordCounter counter = new WordCounter(citeUrl);
-			    //System.out.println(counter.countKeyword(this.searchKeyword));
+				WordCounter counter = new WordCounter(citeUrl);
+			    System.out.println(counter.countKeyword(this.searchKeyword)+" ");
 				
 				retVal.put(title, citeUrl);
 				

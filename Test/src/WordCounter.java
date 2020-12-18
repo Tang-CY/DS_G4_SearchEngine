@@ -19,9 +19,9 @@ public class WordCounter {
 		InputStream in = con.getInputStream();
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		
-		String retVal = "";//?_?
+		String retVal = "";
 		
-		String line = null;//?_?
+		String line = null;
 		
 		while ((line = br.readLine()) != null) {
 			retVal += line + "\n";
