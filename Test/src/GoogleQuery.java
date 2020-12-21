@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 import java.net.URLConnection;
-
+import java.net.URLEncoder;
 import java.util.HashMap;
 
 
@@ -40,6 +40,8 @@ public class GoogleQuery {
 		URL u = new URL(url);
 
 		URLConnection conn = u.openConnection();
+		
+		//conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
 
 		conn.setRequestProperty("User-agent", "Chrome/7.0.517.44");
 
@@ -73,8 +75,9 @@ public class GoogleQuery {
 		// System.out.println(lis);
 		
 		lis = lis.select(".kCrYT");
-		// System.out.println(lis.size());
+		System.out.println(lis.size());
 		
+		int erCount = 0;
 		for(Element li : lis)
 		{
 			try 
@@ -85,20 +88,25 @@ public class GoogleQuery {
 					
 				//System.out.println(li);	//印原結果
 				
-				/*if (citeUrl.contains("/url"))
-					citeUrl = citeUrl.substring(7);	
-				*/
-				System.out.println(citeUrl); //只印網址
-				
-				WordCounter counter = new WordCounter(citeUrl);
-			    System.out.println(counter.countKeyword(this.searchKeyword)+" ");
-				
-				retVal.put(title, citeUrl);
+				try {	
+				//throw in word counter
+					citeUrl = "https://www.google.com/" + citeUrl;
+					URLEncoder.encode(citeUrl, "UTF-8");
+					System.out.println(citeUrl);
+					WordCounter counter = new WordCounter(citeUrl);
+				    System.out.println("appearance: " + counter.countKeyword(this.searchKeyword)+"\n");
+					
+					retVal.put(title, citeUrl);
+				} catch(IOException e) {
+					erCount++;
+					System.out.println("error\n");
+					continue;}
 				
 			} catch (IndexOutOfBoundsException e) {
 //				e.printStackTrace();
 			}
 		}
+		System.out.println("total error: "+ erCount);
 		return retVal; //show all search results' title and URL
 	}
 }
