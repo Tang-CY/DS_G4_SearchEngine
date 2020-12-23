@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.util.ArrayList;
 
 import java.io.IOException;
 
@@ -75,9 +76,9 @@ public class GoogleQuery {
 		// System.out.println(lis);
 		
 		lis = lis.select(".kCrYT");
-		System.out.println(lis.size());
+		//System.out.println(lis.size());
 		
-		int erCount = 0;
+		int count = 0;
 		for(Element li : lis)
 		{
 			try 
@@ -89,24 +90,29 @@ public class GoogleQuery {
 				//System.out.println(li);	//¦L­ìµ²ªG
 				
 				try {	
-				//throw in word counter
+				//count input keyword
 					citeUrl = "https://www.google.com/" + citeUrl;
 					URLEncoder.encode(citeUrl, "UTF-8");
 					System.out.println(citeUrl);
 					WordCounter counter = new WordCounter(citeUrl);
-				    System.out.println("appearance: " + counter.countKeyword(this.searchKeyword)+"\n");
-					
+					WordList wList = new WordList();
+					for (Keyword w: wList.getList()) 
+					{
+						//System.out.println(w+": "+counter.countKeyword(w.name));
+						w.count += counter.countKeyword(w.name);
+						System.out.println(w);
+					}
+				    
 					retVal.put(title, citeUrl);
+					
 				} catch(IOException e) {
-					erCount++;
-					System.out.println("error\n");
+					System.out.println("ERROR\n");
 					continue;}
 				
 			} catch (IndexOutOfBoundsException e) {
 //				e.printStackTrace();
 			}
 		}
-		System.out.println("total error: "+ erCount);
 		return retVal; //show all search results' title and URL
 	}
 }
