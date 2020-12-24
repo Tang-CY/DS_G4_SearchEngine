@@ -89,30 +89,38 @@ public class GoogleQuery {
 					
 				//System.out.println(li);	//¦L­ìµ²ªG
 				
-				try {	
-				//count input keyword
-					citeUrl = "https://www.google.com/" + citeUrl;
-					URLEncoder.encode(citeUrl, "UTF-8");
-					System.out.println(citeUrl);
-					WordCounter counter = new WordCounter(citeUrl);
-					WordList wList = new WordList();
-					for (Keyword w: wList.getList()) 
-					{
-						//System.out.println(w+": "+counter.countKeyword(w.name));
-						w.count += counter.countKeyword(w.name);
-						System.out.println(w);
-					}
-				    
-					retVal.put(title, citeUrl);
 					
-				} catch(IOException e) {
-					System.out.println("ERROR\n");
-					continue;}
-				
-			} catch (IndexOutOfBoundsException e) {
+				//count input keyword
+				citeUrl = "https://www.google.com/" + citeUrl;
+				URLEncoder.encode(citeUrl, "UTF-8");
+				WordList wList = new WordList();
+				WordCounter counter = new WordCounter(citeUrl);
+				boolean hasError = false;
+						
+					try 
+					{
+						for (Keyword w: wList.getList()) 
+							w.count += counter.countKeyword(w.name); //update count
+					} 
+					catch(IOException e) {
+						hasError = true;
+						continue;
+					}
+					if (hasError == false)
+					{
+						System.out.println(citeUrl);
+						for (Keyword w: wList.getList()) 
+							System.out.println(w);
+					}			 		
+				    
+				retVal.put(title, citeUrl);
+									 				
+			} 
+			catch (IndexOutOfBoundsException e) {
 //				e.printStackTrace();
 			}
-		}
-		return retVal; //show all search results' title and URL
+			
+		} //for loop end
+		return retVal; //show all search results' title and URL = last line in console
 	}
 }
