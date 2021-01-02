@@ -18,16 +18,20 @@ import org.jsoup.nodes.Element;
 
 import org.jsoup.select.Elements;
 
-public class GoogleQuery {
+public class GoogleQuery extends LinkedList{
 
 	public String searchKeyword;
 	public String url;
 	public String content;
+	public ArrayList<String> titles;
+	public ArrayList<String> cites;
 
-	public GoogleQuery(String searchKeyword){
+	public GoogleQuery(String searchKeyword) throws IOException{
 
 		this.searchKeyword = searchKeyword;
 		this.url = "http://www.google.com/search?q="+searchKeyword+"&oe=utf8&num=20";
+		this.titles = new ArrayList<String>();
+		this.cites = new ArrayList<String>();
 	}
 
 	private String fetchContent() throws IOException{
@@ -59,16 +63,13 @@ public class GoogleQuery {
 		Elements lis = doc.select("div");
 		lis = lis.select(".kCrYT");
 		
-		int count = 0;
 		for(Element li : lis)
 		{
 			try 
 			{			
 				String citeUrl = li.select("a").get(0).attr("href");
-				String title = li.select("a").get(0).select(".vvjwJb").text();
-				//System.out.println(title + ","+citeUrl);					
+				String title = li.select("a").get(0).select(".vvjwJb").text();				
 									
-				//count input keyword
 				citeUrl = "https://www.google.com/" + citeUrl;
 				URLEncoder.encode(citeUrl, "UTF-8");
 				WordList wList = new WordList();
@@ -86,17 +87,15 @@ public class GoogleQuery {
 					}
 					if (hasError == false)
 					{
-						//System.out.println(citeUrl);
 						retVal.put(title, citeUrl);
-						//for (Keyword w: wList.getList()) 
-							//System.out.println(w);
+						titles.add(title);
+						cites.add(citeUrl);
 					}			 								 				
 			} 
 			catch (IndexOutOfBoundsException e) {
 //				e.printStackTrace();
-			}
-			
-		} //for loop end
-		return retVal; //show all search results' title and URL = last line in console
+			}		
+		}
+		return retVal;
 	}
 }

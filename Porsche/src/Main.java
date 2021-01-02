@@ -10,10 +10,11 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		String keyword = sc.next();
 		System.out.println("running...");
-		// fetch URL on google
+		
+		
 		try {
 			System.out.println(new GoogleQuery(keyword).query());
-			//new Ranking(keyword);
+			new Ranking(keyword);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

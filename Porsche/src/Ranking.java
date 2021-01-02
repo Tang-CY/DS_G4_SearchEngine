@@ -1,39 +1,31 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import org.apache.jasper.tagplugins.jstl.core.Url;
 
 public class Ranking {
 	
-	private HashMap<String, String> dough;
-	private HashMap<String, String> donut;
+	private ArrayList<String> dough;
+	private ArrayList<String> donut;
 	private WordList L;
+	private GoogleQuery G;
 	
 	public Ranking(String searchKeyword) throws IOException {
-		GoogleQuery  G= new GoogleQuery(searchKeyword);
+		G = new GoogleQuery(searchKeyword);
 		this.L = new WordList();
-		dough = new HashMap<String, String>();
-		donut = new HashMap<String, String>();
-		dough = G.query();
-		//ranking();
-		System.out.println(dough);
+		dough = new ArrayList<String>();
+		donut = new ArrayList<String>();
+		dough = G.cites;
+		ranking();
 	}
 	
-	/*public void ranking() throws NullPointerException{
-		int max = 0;
-		int score = 0;
-		//while (dough.isEmpty() == false)
-		//{
-			for (Map.Entry in: dough.entrySet()) {
-		          for (Keyword w: L.getList()) {
-		        	  score += w.count * w.weight;
-		          	  if (score > max) {
-		          		  max = score; 
-		          		  System.out.println("Max Score: "+ max + "#1: " + in);
-		          	  }
-		          }
-		    }
-			//dough.remove("fuck");
-		//} 	  
+	public void ranking() throws NullPointerException{
+		for (String c: dough) 
+		{
+	        System.out.println(new CiteUrl(c).score);
+	    } 
 	}
 	
 	/*public String display(){
