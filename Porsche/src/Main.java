@@ -8,13 +8,12 @@ public class Main {
 		//User Input
 		System.out.println("Enter Keyword: ");
 		Scanner sc = new Scanner(System.in);
-		String keyword = sc.next();
+		String keyword = sc.next()+"porsche";
 		System.out.println("running...");
 		
 		
 		try {
 			System.out.println(new GoogleQuery(keyword).query());
-			new Ranking(keyword);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

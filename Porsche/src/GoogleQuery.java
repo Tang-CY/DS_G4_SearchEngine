@@ -1,5 +1,6 @@
 import java.io.BufferedReader;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -7,8 +8,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.HashMap;
-
-
+import java.util.PriorityQueue;
 
 import org.jsoup.Jsoup;
 
@@ -18,20 +18,18 @@ import org.jsoup.nodes.Element;
 
 import org.jsoup.select.Elements;
 
-public class GoogleQuery extends LinkedList{
+public class GoogleQuery{
 
 	public String searchKeyword;
 	public String url;
 	public String content;
-	public ArrayList<String> titles;
-	public ArrayList<String> cites;
+	public PriorityQueue<WebNode> temp; 
 
 	public GoogleQuery(String searchKeyword) throws IOException{
 
 		this.searchKeyword = searchKeyword;
 		this.url = "http://www.google.com/search?q="+searchKeyword+"&oe=utf8&num=20";
-		this.titles = new ArrayList<String>();
-		this.cites = new ArrayList<String>();
+		this.temp = new PriorityQueue<WebNode>(new NodeComparator());
 	}
 
 	private String fetchContent() throws IOException{
@@ -51,17 +49,16 @@ public class GoogleQuery extends LinkedList{
 		return retVal;
 	}
 	
-	public HashMap<String, String> query() throws IOException{
+	public String[][] query() throws IOException{
 
 		if(content==null)
 			content= fetchContent();
-
-		HashMap<String, String> retVal = new HashMap<String, String>();
 			 //<Title, Url>
 		Document doc = Jsoup.parse(content);		
 		//System.out.println(doc.text()+"\n\n"); //Title	 
 		Elements lis = doc.select("div");
 		lis = lis.select(".kCrYT");
+		String[][] retVal = new String[lis.size()][2];
 		
 		for(Element li : lis)
 		{
@@ -87,14 +84,21 @@ public class GoogleQuery extends LinkedList{
 					}
 					if (hasError == false)
 					{
-						retVal.put(title, citeUrl);
-						titles.add(title);
-						cites.add(citeUrl);
+						temp.offer(new WebNode(new WebPage(citeUrl, title)));
 					}			 								 				
 			} 
 			catch (IndexOutOfBoundsException e) {
 //				e.printStackTrace();
 			}		
+		}
+		WebNode n;
+		for (int i = 0; i < temp.size(); i++)
+		{
+			if ((n = (WebNode)temp.poll()) != null)
+			{	
+				retVal[i][0] = n.webPage.name;
+				retVal[i][1] = n.webPage.url;
+			}
 		}
 		return retVal;
 	}

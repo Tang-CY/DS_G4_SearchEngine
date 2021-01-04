@@ -39,21 +39,10 @@ public class TestProject extends HttpServlet {
 			return;
 		}
 		GoogleQuery google = new GoogleQuery(request.getParameter("keyword"));
-		HashMap<String, String> query = google.query();
-		
-		String[][] s = new String[query.size()][2];
-		request.setAttribute("query", s);
-		int num = 0;
-		for(Entry<String, String> entry : query.entrySet()) {
-		    String key = entry.getKey();
-		    String value = entry.getValue();
-		    s[num][0] = key;
-		    s[num][1] = value;
-		    num++;
-		}
+		String[][] query = google.query();
+		request.setAttribute("query", query);
 		request.getRequestDispatcher("googleitem.jsp")
 		 .forward(request, response); 
-		
 	}
 
 	/**
