@@ -8,7 +8,7 @@ public class Main {
 		//User Input
 		System.out.println("Enter Keyword: ");
 		Scanner sc = new Scanner(System.in);
-		String keyword = sc.next()+"porsche";
+		String keyword = sc.next();
 		System.out.println("running...");	
 		
 		try {

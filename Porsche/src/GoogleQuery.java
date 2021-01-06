@@ -29,7 +29,7 @@ public class GoogleQuery{
 
 		//this.searchKeyword = searchKeyword;
 		this.searchKeyword = new String(searchKeyword.getBytes("UTF-8"),"UTF-8");
-		this.url = "http://www.google.com/search?q="+searchKeyword+"&oe=utf8&num=20";
+		this.url = "http://www.google.com/search?q="+searchKeyword+"+porsche"+"&oe=utf8&num=20";
 		//this.url = "http://www.google.com/search?q="+searchKeyword+"&ie=UTF-8&num=12";
 		this.temp = new PriorityQueue<WebNode>(new NodeComparator());
 	}
@@ -105,14 +105,17 @@ public class GoogleQuery{
 			}		
 		}
 		
-		System.out.println("OK: "+okCite);
+//		System.out.println("OK: "+okCite);
 		
 		WebNode n;
 		int i = 0;
 		while ((n = temp.poll()) != null) 
 		{
-			retVal[i][0] = n.webPage.name;
-			retVal[i][1] = n.webPage.url;
+			if ((n.webPage.name != null) && (n.webPage.url != null))
+			{
+				retVal[i][0] = n.webPage.name;
+				retVal[i][1] = n.webPage.url;
+			}
 			i++;
 		}
 		/*for (int i = 0; i < temp.size(); i++)
