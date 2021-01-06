@@ -11,6 +11,7 @@ public class WordCounter {
 	
 	public WordCounter(String urlStr) {
 		this.urlStr = urlStr;
+		//this.content = urlStr + "\n";
 	}
 	
 	private String fetchContent() throws IOException{
@@ -32,7 +33,7 @@ public class WordCounter {
 	public int countKeyword(String keyword) throws IOException{
 		
 		if (content == null) {
-			content = fetchContent();
+			content = this.urlStr + fetchContent();
 		}
 		//turn into upper-case
 		content = content.toUpperCase();

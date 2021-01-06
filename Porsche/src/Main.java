@@ -9,8 +9,7 @@ public class Main {
 		System.out.println("Enter Keyword: ");
 		Scanner sc = new Scanner(System.in);
 		String keyword = sc.next()+"porsche";
-		System.out.println("running...");
-		
+		System.out.println("running...");	
 		
 		try {
 			System.out.println(new GoogleQuery(keyword).query());

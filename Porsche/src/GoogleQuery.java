@@ -19,7 +19,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class GoogleQuery{
-
+//  <%System.out.println("orderlist length: "+orderList.length); %>
 	public String searchKeyword;
 	public String url;
 	public String content;
@@ -27,8 +27,10 @@ public class GoogleQuery{
 
 	public GoogleQuery(String searchKeyword) throws IOException{
 
-		this.searchKeyword = searchKeyword;
+		//this.searchKeyword = searchKeyword;
+		this.searchKeyword = new String(searchKeyword.getBytes("UTF-8"),"UTF-8");
 		this.url = "http://www.google.com/search?q="+searchKeyword+"&oe=utf8&num=20";
+		//this.url = "http://www.google.com/search?q="+searchKeyword+"&ie=UTF-8&num=12";
 		this.temp = new PriorityQueue<WebNode>(new NodeComparator());
 	}
 
@@ -53,12 +55,15 @@ public class GoogleQuery{
 
 		if(content==null)
 			content= fetchContent();
-			 //<Title, Url>
+		
 		Document doc = Jsoup.parse(content);		
 		//System.out.println(doc.text()+"\n\n"); //Title	 
 		Elements lis = doc.select("div");
-		lis = lis.select(".kCrYT");
-		String[][] retVal = new String[lis.size()][2];
+		//lis = lis.select(".kCrYT");
+		lis = lis.select(".ZINbbc");
+		//lis = lis.select("lEXIrb");
+		String[][] retVal = new String[20][2];
+		int okCite = 0;
 		
 		for(Element li : lis)
 		{
@@ -66,8 +71,9 @@ public class GoogleQuery{
 			{			
 				String citeUrl = li.select("a").get(0).attr("href");
 				String title = li.select("a").get(0).select(".vvjwJb").text();				
-									
+
 				citeUrl = "https://www.google.com/" + citeUrl;
+				//citeUrl = "http://www.google.com.tw" + citeUrl;
 				URLEncoder.encode(citeUrl, "UTF-8");
 				WordList wList = new WordList();
 				WordCounter counter = new WordCounter(citeUrl);
@@ -84,22 +90,42 @@ public class GoogleQuery{
 					}
 					if (hasError == false)
 					{
-						temp.offer(new WebNode(new WebPage(citeUrl, title)));
+						okCite++;
+						//System.out.println("TITLE:  "+title);
+						//System.out.println("URL:    "+citeUrl+"\n");
+						WebPage wp = new WebPage(citeUrl, title);
+						WebNode wn = new WebNode(wp);
+						wn.setNodeScore(wList.getList());
+						temp.offer(wn);
+//						System.out.println(temp.size());
 					}			 								 				
 			} 
 			catch (IndexOutOfBoundsException e) {
 //				e.printStackTrace();
 			}		
 		}
+		
+		System.out.println("OK: "+okCite);
+		
 		WebNode n;
-		for (int i = 0; i < temp.size(); i++)
+		int i = 0;
+		while ((n = temp.poll()) != null) 
 		{
-			if ((n = (WebNode)temp.poll()) != null)
-			{	
-				retVal[i][0] = n.webPage.name;
-				retVal[i][1] = n.webPage.url;
-			}
+			retVal[i][0] = n.webPage.name;
+			retVal[i][1] = n.webPage.url;
+			i++;
 		}
+		/*for (int i = 0; i < temp.size(); i++)
+		{
+			if ((n = temp.poll()) != null)
+			{	
+//				if (n.webPage.url.equals("null") == false)
+//				{
+					retVal[i][0] = n.webPage.name;
+					retVal[i][1] = n.webPage.url;
+//				}
+			}
+		}*/
 		return retVal;
 	}
 }

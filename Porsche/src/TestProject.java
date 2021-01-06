@@ -41,7 +41,7 @@ public class TestProject extends HttpServlet {
 		GoogleQuery google = new GoogleQuery(request.getParameter("keyword"));
 		String[][] query = google.query();
 		request.setAttribute("query", query);
-		request.getRequestDispatcher("googleitem.jsp")
+		request.getRequestDispatcher("GoogleItem.jsp")
 		 .forward(request, response); 
 	}
 
